@@ -69,5 +69,23 @@ public class Calculator {
     }
   }
   
+  public static ArrayList<Integer> undeliveredWhiteSheep(Point[] sheepToDeliver) {
+    ArrayList<Integer> undelivered = new ArrayList<Integer>(sheepToDeliver.length);
+    for (int i = 0; i < sheepToDeliver.length; i++) {
+      if (sheepToDeliver[i].x >= FIELD_SIZE * 0.5) {
+        undelivered.add(i);
+      }
+    }
+    return undelivered;
+  }
   
+  public static ArrayList<Integer> undeliveredBlackSheep(Point[] sheepToDeliver) {
+    ArrayList<Integer> undelivered = new ArrayList<Integer>(sheepToDeliver.length);
+    for (int i = 0; i < sheepToDeliver.length; i++) {
+      if (sheepToDeliver[i].x <= FIELD_SIZE * 0.5) {
+        undelivered.add(i);
+      }
+    }
+    return undelivered;
+  }
 }
