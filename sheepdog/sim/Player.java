@@ -9,6 +9,7 @@ public abstract class Player {
     
     // Return: the next position
     // my position: dogs[id-1]
+    // White sheep are always first in the list
     public abstract Point move(Point[] dogs, // positions of dogs
                                Point[] sheeps); // positions of the sheeps
 
