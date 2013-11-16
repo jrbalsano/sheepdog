@@ -20,8 +20,8 @@ public class Player extends sheepdog.sim.Player  {
   @Override
   public Point move(Point[] dogs, Point[] sheeps) {
     // TODO Auto-generated method stub
-    Point[] whiteSheep = Arrays.copyOfRange(sheeps, 0, sheeps.length - mNblacks);
-    Point[] blackSheep = Arrays.copyOfRange(sheeps, sheeps.length - mNblacks, sheeps.length);
+    Point[] blackSheep = Arrays.copyOfRange(sheeps, 0, mNblacks);
+    Point[] whiteSheep = Arrays.copyOfRange(sheeps, mNblacks, sheeps.length);
     return mBrain.getMove(dogs, whiteSheep, blackSheep);
   }
 
