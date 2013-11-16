@@ -27,7 +27,8 @@ public class StraightLineBrain extends sheepdog.g3.DogBrain{
 		//If dog on the left side of fence, move dog towards the gap
 		if(Calculator.getSide(dogs[mId].x) == SIDE.WHITE_GOAL_SIDE)
 		{
-			double angle = Math.atan(dogs[mId].y/dogs[mId].x);
+		    Point gap = getGapCoordinates();
+			double angle = Math.atan((gap.y - dogs[mId].y)/(gap.x - dogs[mId].x));
 			double new_x = dogs[mId].x + Math.cos(angle) * MAX_DOG_MOVEMENT;
 			double new_y = dogs[mId].y + Math.sin(angle) * MAX_DOG_MOVEMENT;
 			
