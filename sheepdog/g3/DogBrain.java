@@ -3,9 +3,9 @@ package sheepdog.g3;
 import sheepdog.sim.Point;
 
 public abstract class DogBrain {
-  private int mId;
-  private boolean mAdvanced;
-  private int mNblacks;
+  protected int mId;
+  protected boolean mAdvanced;
+  protected int mNblacks;
   
   public DogBrain(int id, boolean advanced, int nblacks) {
     mId = id - 1;

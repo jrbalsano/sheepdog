@@ -1,7 +1,6 @@
 package sheepdog.g3;
 
 import java.util.Arrays;
-
 import sheepdog.sim.Point;
 
 public class Player extends sheepdog.sim.Player  {
@@ -15,6 +14,7 @@ public class Player extends sheepdog.sim.Player  {
     mNblacks = nblacks;
     mMode = mode;
     // Initialize new Dog Brain
+    mBrain = new StraightLineBrain(id, mode, nblacks);
   }
 
   @Override
