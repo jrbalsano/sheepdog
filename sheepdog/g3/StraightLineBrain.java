@@ -1,5 +1,8 @@
 package sheepdog.g3;
 
+import java.util.ArrayList;
+
+import sheepdog.g3.Calculator.SIDE;
 import sheepdog.sim.Point;
 
 public class StraightLineBrain extends sheepdog.g3.DogBrain{
@@ -22,7 +25,7 @@ public class StraightLineBrain extends sheepdog.g3.DogBrain{
 	public Point getMove(Point[] dogs, Point[] whiteSheep, Point[] blackSheep)
 	{
 		//If dog on the left side of fence, move dog towards the gap
-		if(Calculator.getSide(dogs[mId].x) == 0)
+		if(Calculator.getSide(dogs[mId].x) == SIDE.WHITE_GOAL_SIDE)
 		{
 			double angle = Math.atan(dogs[mId].y/dogs[mId].x);
 			double new_x = dogs[mId].x + Math.cos(angle) * MAX_DOG_MOVEMENT;
@@ -106,13 +109,15 @@ public class StraightLineBrain extends sheepdog.g3.DogBrain{
 	{
 		double min_dist = Double.MAX_VALUE;
 		int min_id=0;
-		for(int i=0;i<whiteSheep.length;i++)
+		ArrayList<Integer> undeliveredIndices = Calculator.undeliveredWhiteSheep(whiteSheep);
+		for(Integer index : undeliveredIndices)
 		{
-			double temp_dist = Calculator.dist(gap, whiteSheep[i]);
-			if(temp_dist<min_dist && undeliveredWhite[i])
+		    Point sheep = whiteSheep[index];
+			double temp_dist = Calculator.dist(gap, sheep);
+			if(temp_dist<min_dist)
 			{
 				min_dist = temp_dist;
-				min_id=i;
+				min_id=index;
 			}
 		}
 		return min_id;
@@ -121,13 +126,15 @@ public class StraightLineBrain extends sheepdog.g3.DogBrain{
 	{
 		double min_dist = Double.MAX_VALUE;
 		int min_id=0;
-		for(int i=0;i<blackSheep.length;i++)
+		ArrayList<Integer> undeliveredIndices = Calculator.undeliveredBlackSheep(blackSheep);
+		for(Integer index : undeliveredIndices)
 		{
-			double temp_dist = Calculator.dist(gap, blackSheep[i]);
-			if(temp_dist<min_dist && undeliveredBlack[i])
+		    Point sheep = blackSheep[index];
+			double temp_dist = Calculator.dist(gap, sheep);
+			if(temp_dist<min_dist)
 			{
 				min_dist = temp_dist;
-				min_id=i;
+				min_id=index;
 			}
 		}
 		return min_id;

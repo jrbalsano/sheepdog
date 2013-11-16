@@ -11,6 +11,7 @@ public class Calculator {
   public static final double DOG_MAX_SPEED = 2.0;
   public static final double OPEN_LEFT = 49.0;
   public static final double OPEN_RIGHT = 51.0;
+  public static enum SIDE { WHITE_GOAL_SIDE, BLACK_GOAL_SIDE, MIDDLE };
   
   public static double dist(Point p1, Point p2) {
     return Math.sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
@@ -40,13 +41,13 @@ public class Calculator {
       return true;
   }
   
-  public static int getSide(double x) {
+  public static SIDE getSide(double x) {
     if (x < FIELD_SIZE * 0.5)
-      return 0;
+      return SIDE.WHITE_GOAL_SIDE;
     else if (x > FIELD_SIZE * 0.5)
-      return 1;
+      return SIDE.BLACK_GOAL_SIDE;
     else
-      return 2;
+      return SIDE.MIDDLE;
 }
 
   public static boolean hitTheFence(Point src, Point dst) {
@@ -54,7 +55,7 @@ public class Calculator {
     if (getSide(src.x) == getSide(dst.x)) { return false; }
 
     // one point is on the fence
-    if (getSide(src.x) == 2 || getSide(dst.x) == 2) { return false; }
+    if (getSide(src.x) == SIDE.MIDDLE || getSide(dst.x) == SIDE.MIDDLE) { return false; }
     
     // Find the y coordinate of the the point (50, y) on the line connecting
     // the two points.
