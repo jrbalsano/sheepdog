@@ -7,9 +7,10 @@ import sheepdog.sim.Point;
 
 public class StraightLineBrain extends sheepdog.g3.DogBrain{
 	
-	private int MAX_DOG_MOVEMENT = 2; //20m/s * 0.1s
+	private double MAX_DOG_MOVEMENT = 1.95; //20m/s * 0.1s
 	private double DOG_SHEEP_MIN_DIST = .001; //TODO: tune parameter
-	
+	int prevClosestSheep = -1;
+	boolean prevWhichSheep = true;
 	public StraightLineBrain(int id, boolean advanced, int nblacks) {
 		super(id,advanced,nblacks);
 	}
@@ -54,50 +55,96 @@ public class StraightLineBrain extends sheepdog.g3.DogBrain{
 		
 		boolean whichSheep = true; //true: black, false:white
 		int closestSheep = 0;
+		
 		if(closestBlackSheepDistanceToGap < closestWhiteSheepDistanceToGap)
 		{
+			prevClosestSheep = closestSheep;
+			prevWhichSheep = whichSheep;
 			closestSheep = closestBlackSheepToGap;
 			whichSheep = true;
 		}
 		else {
+			prevClosestSheep = closestSheep;
+			prevWhichSheep = whichSheep;
 			closestSheep = closestWhiteSheepToGap;
 			whichSheep = false;
 		}
 		
+		boolean changed =false;
+		if(prevWhichSheep!=whichSheep && prevClosestSheep!=closestSheep)
+			changed = true;
+		
+//		if(changed)
+//		{
+//			return new Point(50.0,50.0);
+//		}
+		
+		System.out.println("Sheep Id: "+closestSheep+" Type: "+whichSheep);
+		
 		//black sheep closest to gap
 		if (whichSheep) {
-			double sheepAngle = Math.atan(blackSheep[closestSheep].y/blackSheep[closestSheep].x);
+			double sheepAngleToGap = Math.atan((gap.y-blackSheep[closestSheep].y)/(gap.x-blackSheep[closestSheep].x));
 			double new_x, new_y;
+			System.out.println("Processing black sheep");
 			
 			//Dog not behind sheep, move dog towards sheep
 			if (Calculator.dist(gap, dogs[mId]) < closestBlackSheepDistanceToGap) {
-				new_x = dogs[mId].x + Math.cos(sheepAngle) * MAX_DOG_MOVEMENT;
-				new_y = dogs[mId].y + Math.sin(sheepAngle) * MAX_DOG_MOVEMENT;
+				System.out.println("move dog to sheep");
+				new_x = dogs[mId].x + Math.cos(sheepAngleToGap) * MAX_DOG_MOVEMENT;
+				new_y = dogs[mId].y + Math.sin(sheepAngleToGap) * MAX_DOG_MOVEMENT;
 				//TODO: optimize if dog crosses sheep
+			}
+			else if(Calculator.dist(gap, dogs[mId]) > closestBlackSheepDistanceToGap && Calculator.dist(blackSheep[closestSheep], dogs[mId]) > 2)
+//			if(Calculator.dist(blackSheep[closestSheep], dogs[mId]) > 2)
+			{
+				System.out.println("Inside new fix code");
+				Point tempDogPoint = new Point();
+				tempDogPoint.x = blackSheep[closestSheep].x + Math.cos(sheepAngleToGap) * DOG_SHEEP_MIN_DIST;
+				tempDogPoint.y = blackSheep[closestSheep].y + Math.cos(sheepAngleToGap) * DOG_SHEEP_MIN_DIST;
+				
+				double dogMovementAngle = Math.atan((dogs[mId].y-tempDogPoint.y)/(dogs[mId].x-tempDogPoint.x));
+				new_x = dogs[mId].x + Math.cos(dogMovementAngle) * MAX_DOG_MOVEMENT;
+				new_y = dogs[mId].y + Math.sin(dogMovementAngle) * MAX_DOG_MOVEMENT;
 			}
 			//Dog already behind sheep, push sheep closer to gap
 			else {
-				new_x = blackSheep[closestSheep].x + Math.cos(sheepAngle) * DOG_SHEEP_MIN_DIST;
-				new_y = blackSheep[closestSheep].y + Math.sin(sheepAngle) * DOG_SHEEP_MIN_DIST;
+				System.out.println("inside else...maybe an error");
+				new_x = blackSheep[closestSheep].x + Math.cos(sheepAngleToGap) * DOG_SHEEP_MIN_DIST;
+				new_y = blackSheep[closestSheep].y + Math.sin(sheepAngleToGap) * DOG_SHEEP_MIN_DIST;
 			}
 			Point newPoint = new Point(new_x,new_y);
 			return newPoint;
 		}
 		//white sheep closest to gap. Redundant code.
 		else {
-			double sheepAngle = Math.atan(whiteSheep[closestSheep].y/whiteSheep[closestSheep].x);
+			double sheepAngleToGap = Math.atan((gap.y-whiteSheep[closestSheep].y)/(gap.x-whiteSheep[closestSheep].x));
 			double new_x, new_y;
+			System.out.println("Processing white sheep");
 			
 			//Dog not behind sheep, move dog 
 			if (Calculator.dist(gap, dogs[mId]) < closestWhiteSheepDistanceToGap) {
-				new_x = dogs[mId].x + Math.cos(sheepAngle) * MAX_DOG_MOVEMENT;
-				new_y = dogs[mId].y + Math.sin(sheepAngle) * MAX_DOG_MOVEMENT;
+				System.out.println("move dog to sheep");
+				new_x = dogs[mId].x + Math.cos(sheepAngleToGap) * MAX_DOG_MOVEMENT;
+				new_y = dogs[mId].y + Math.sin(sheepAngleToGap) * MAX_DOG_MOVEMENT;
 				//TODO: optimize if dog crosses sheep
+			}
+			else if(Calculator.dist(gap, dogs[mId]) > closestWhiteSheepDistanceToGap && Calculator.dist(whiteSheep[closestSheep], dogs[mId]) > 2)
+//			if(Calculator.dist(whiteSheep[closestSheep], dogs[mId]) > 2)
+			{
+				System.out.println("Inside new fix code");
+				Point tempDogPoint = new Point();
+				tempDogPoint.x = whiteSheep[closestSheep].x + Math.cos(sheepAngleToGap) * DOG_SHEEP_MIN_DIST;
+				tempDogPoint.y = whiteSheep[closestSheep].y + Math.cos(sheepAngleToGap) * DOG_SHEEP_MIN_DIST;
+				
+				double dogMovementAngle = Math.atan((dogs[mId].y-tempDogPoint.y)/(dogs[mId].x-tempDogPoint.x));
+				new_x = dogs[mId].x + Math.cos(dogMovementAngle) * MAX_DOG_MOVEMENT;
+				new_y = dogs[mId].y + Math.sin(dogMovementAngle) * MAX_DOG_MOVEMENT;
 			}
 			//Dog already behind sheep
 			else {
-				new_x = whiteSheep[closestSheep].x + Math.cos(sheepAngle) * DOG_SHEEP_MIN_DIST;
-				new_y = whiteSheep[closestSheep].y + Math.sin(sheepAngle) * DOG_SHEEP_MIN_DIST;
+				System.out.println("inside else...maybe an error");
+				new_x = whiteSheep[closestSheep].x + Math.cos(sheepAngleToGap) * DOG_SHEEP_MIN_DIST;
+				new_y = whiteSheep[closestSheep].y + Math.sin(sheepAngleToGap) * DOG_SHEEP_MIN_DIST;
 			}
 			Point newPoint = new Point(new_x,new_y);
 			return newPoint;
