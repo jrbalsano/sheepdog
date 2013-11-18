@@ -14,4 +14,8 @@ public class Point {
     public boolean equals(Point o) {
         return o.x == x && o.y == y;
     }
+    
+    public String toString() {
+        return "[" + x + ", " + y + "]";
+    }
 }
