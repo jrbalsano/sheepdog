@@ -632,6 +632,8 @@ public class Sheepdog
         int ndogs = DEFAULT_DOGS; // d
         int nsheeps = DEFAULT_SHEEPS; // S
         int nblacks = DEFAULT_BLACKS; // B
+        int iterations = 1;
+        String version = "unknown version";
         boolean mode = DEFAULT_MODE; // basic or advance?
 
         if (args.length > 0)
@@ -646,22 +648,39 @@ public class Sheepdog
             mode = Boolean.parseBoolean(args[4]);
         if (args.length > 5)
             gui = Boolean.parseBoolean(args[5]);
-
-        // load players
-        Player[] players = loadPlayers(group, ndogs);
+        if (args.length > 6)
+            iterations = Integer.parseInt(args[6]);
+        if (args.length > 7)
+            version = args[7];
         
-        // create game
-        Sheepdog game = new Sheepdog(players, nsheeps, nblacks, mode);
-        // init game
-        game.init();
-        // play game
-        if (gui) {
-            game.playgui();
+        int average = 0;
+        for (int i = 0; i < iterations; i++) {
+            // load players
+            Player[] players = loadPlayers(group, ndogs);
+        
+            // create game
+            Sheepdog game = new Sheepdog(players, nsheeps, nblacks, mode);
+            // init game
+            game.init();
+            // play game
+        
+            if (gui) {
+                game.playgui();
+            }
+            else {
+                game.play();
+            }
+            average = (average * i + game.tick)/(i+1);
+        }
+        if (version.equals("unknown version")) {
+            System.err.println("Average Ticks: " + average);
         }
         else {
-            game.play();
+            PrintWriter writer = new PrintWriter(new FileWriter("stats.csv", true));
+            writer.printf("\"%s\",\"%s\",\"%d\",\"%d\",\"%d\",\"%b\",\"%d\",\"%d\"", 
+                    version, group, ndogs, nsheeps, nblacks, mode, iterations, average);
+            writer.close();
         }
-
     }        
 
     // players
