@@ -677,7 +677,7 @@ public class Sheepdog
         }
         else {
             PrintWriter writer = new PrintWriter(new FileWriter("stats.csv", true));
-            writer.printf("\"%s\",\"%s\",\"%d\",\"%d\",\"%d\",\"%b\",\"%d\",\"%d\"", 
+            writer.printf("\"%s\",\"%s\",\"%d\",\"%d\",\"%d\",\"%b\",\"%d\",\"%d\"\n", 
                     version, group, ndogs, nsheeps, nblacks, mode, iterations, average);
             writer.close();
         }
