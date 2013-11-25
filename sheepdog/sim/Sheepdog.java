@@ -702,10 +702,10 @@ public class Sheepdog
         int average = 0;
         for (int i = 0; i < iterations; i++) {
             // load players
-            Player[] players = loadPlayers(group, ndogs);
+            Player[] players2 = loadPlayers(group, ndogs);
         
             // create game
-            Sheepdog game = new Sheepdog(players, nsheeps, nblacks, mode);
+            Sheepdog game = new Sheepdog(players2, nsheeps, nblacks, mode);
             // init game
             game.init();
             // play game

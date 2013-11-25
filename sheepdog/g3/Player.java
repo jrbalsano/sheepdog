@@ -14,11 +14,17 @@ public class Player extends sheepdog.sim.Player  {
     mMode = mode;
 //    mBrain = new StraightLineBrainGap(id, mode, nblacks);
 //    mBrain = new StraightLineBrainFar(id, mode, nblacks);
-    mBrain = new StraightLineBrainMe(id, mode, nblacks);
+//    mBrain = new StraightLineBrainMe(id, mode, nblacks);
+    mBrain = new SteinerBrain(id, mode, nblacks);
   }
 
   @Override
   public Point move(Point[] dogs, Point[] sheeps) {
+	  
+	  if(SteinerBrain.removal==1)
+		  mBrain = new StraightLineBrainMe(id, mMode, mNblacks);
+		  
+	  
     return mBrain.getMove(dogs, sheeps);
   }
 
