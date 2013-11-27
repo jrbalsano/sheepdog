@@ -40,7 +40,7 @@ public class ConvexHullBrain extends DogBrain {
     private ArrayList<Point> getConvexHull(Point[] sheep, ArrayList<Integer> undeliveredIndices) {
         ArrayList<Point> hull = new ArrayList<Point>();
         Point max = sheep[undeliveredIndices.get(0)], min = sheep[undeliveredIndices.get(0)];
-        
+
         for(Integer i : undeliveredIndices) {
             Point p = sheep[i];
             if (p.y > max.y) { max = p; }
@@ -59,24 +59,34 @@ public class ConvexHullBrain extends DogBrain {
             for (Integer i : undeliveredIndices) {
                 Point candidate = sheep[i];
                 double angle = Calculator.getAngleOfTrajectory(p1, candidate);
+                
+                //solve atan2 problem
+                if(angle<0)
+                	angle+=2*Math.PI;
+                
                 if (angle < minAngle) {
-//                    System.out.println("Comparing points " + p1 + ", " + candidate);
                     minAngle = angle;
                     p2 = candidate;
                     minIndex = i;
-//                    System.out.println("min angle " + minAngle );
                 }
             }
             hull.add(p2);
-//            System.out.println("Choosing point " + p2 + "index" + minIndex);
-//            System.out.println(undeliveredIndices.toString());
             if (undeliveredIndices.size() > 0) {
                 undeliveredIndices.remove(new Integer(minIndex));
             }
-            if (p2 == max) {
+            if (p2.y == max.y) {
                 break;
             }
         }
+        
+        //debugging print to confirm correct hull formation
+        System.out.println("*******************HULL*********************");
+        for(Point i: hull)
+        {
+        	System.out.println(i);
+        }
+        System.out.println("*********************************************");
+        //end of hull print
         
         return hull;
         
