@@ -14,8 +14,8 @@ public class Player extends sheepdog.sim.Player  {
     mMode = mode;
 //    mBrain = new StraightLineBrainGap(id, mode, nblacks);
 //    mBrain = new StraightLineBrainFar(id, mode, nblacks);
-//    mBrain = new StraightLineBrainMe(id, mode, nblacks);
-    mBrain = new SteinerBrain(id, mode, nblacks);
+    mBrain = new StraightLineBrainMe(id, mode, nblacks);
+//    mBrain = new SteinerBrain(id, mode, nblacks);
   }
 
   @Override

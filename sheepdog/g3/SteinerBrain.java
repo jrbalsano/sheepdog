@@ -63,7 +63,7 @@ public class SteinerBrain extends sheepdog.g3.DogBrain {
         
 		
         //If dog on the left side of fence, move dog towards the gap
-        if(Calculator.getSide(dogs[mId].x) == SIDE.WHITE_GOAL_SIDE)
+        if(Calculator.getSide(dogs[mId].x) == SIDE.BLACK_GOAL_SIDE)
         {
             return Calculator.getMoveTowardPoint(me, GAP);
         }
