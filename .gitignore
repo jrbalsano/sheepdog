@@ -1,3 +1,12 @@
 *.class
 .classpath
 .project
+.DS_Store
+sheepdog/g1
+sheepdog/g2
+sheepdog/g3
+sheepdog/g4
+sheepdog/g5
+sheepdog/g7
+sheepdog/g8
+sheepdog/g9
