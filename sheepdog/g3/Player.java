@@ -22,10 +22,10 @@ public class Player extends sheepdog.sim.Player  {
   @Override
   public Point move(Point[] dogs, Point[] sheeps) {
 	  
-	  if(SteinerBrain.removal==1)
-		  mBrain = new StraightLineBrainMe(id, mMode, mNblacks);
+//	  if(SteinerBrain.removal==1)
+//		  mBrain = new StraightLineBrainMe(id, mMode, mNblacks);
 		  
-	  
+	   
     return mBrain.getMove(dogs, sheeps);
   }
 
