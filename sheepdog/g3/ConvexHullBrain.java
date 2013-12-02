@@ -64,6 +64,8 @@ public class ConvexHullBrain extends DogBrain {
         }
         Point wallMax = new Point(Calculator.FIELD_SIZE*0.5, max.y);
         Point wallMin = new Point(Calculator.FIELD_SIZE*0.5, min.y);
+        if (wallMax.y > 50) { wallMax.y = 50.0; }
+        if (wallMin.y > 50) { wallMin.y = 50.0; }
         Point p1 = wallMin;
         
         for(;;) {
@@ -153,7 +155,7 @@ public class ConvexHullBrain extends DogBrain {
         
         int nextGoal = -1;
         double dogAngle = Calculator.getAngleOfTrajectory(GAP, dogs[mId]);
-        if (dogAngle == 0) { return sheeps[choices.get(0)]; } 
+        if (dogAngle == 0 || choices.size() == 1) { return sheeps[choices.get(0)]; } 
         
         while (nextGoal == -1) {
             double leastDist = Calculator.FIELD_SIZE;
