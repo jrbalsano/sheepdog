@@ -1,7 +1,6 @@
 package sheepdog.g3;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -9,12 +8,10 @@ import sheepdog.g3.Calculator.SIDE;
 import sheepdog.sim.Point;
 
 public class ConvexHullBrain extends DogBrain {
-    private final int FOLLOW_FOR_START = 6;
+    private final double MAX_DIFF = 10.0;
     double zoneAngleSize;
     double myAngleStart;
     double myAngleEnd;
-    int targetSheep = -1;
-    int followForXTurns = FOLLOW_FOR_START;
     boolean clockwise = false;
     
 
@@ -41,13 +38,53 @@ public class ConvexHullBrain extends DogBrain {
         }
         ArrayList<Integer> undeliveredIndices = Calculator.undeliveredBlackSheep(sheep);
         ArrayList<Integer> hull = getConvexHull(sheep, undeliveredIndices);
-        Point sheepTarget = getSheepToTravelTo(hull, sheep, dogs);
+        
+        boolean massed = sheepMassed(sheep, hull);
+        Point sheepTarget;
+        if (massed) {
+            sheepTarget = getFurthestSheep(undeliveredIndices, sheep, dogs);
+        }
+        else {
+            sheepTarget = getSheepToTravelTo(hull, sheep, dogs);
+        }
+        
         if (sheepTarget.x == 50.0) {
             return Calculator.getMoveTowardPoint(me, sheepTarget);
         }
         return forceSheepToMove(sheepTarget, me);
     }
+
+    private boolean sheepMassed(Point[] sheep, ArrayList<Integer> hull) {
+        boolean massed = false;
+        Point min = sheep[hull.get(0)];
+        Point max = sheep[hull.get(0)];
+        for (int i : hull) {
+            if (sheep[i].y < Calculator.FIELD_SIZE * 0.5 && sheep[i].y < min.y) { min = sheep[i]; }
+            if (sheep[i].y > Calculator.FIELD_SIZE * 0.5 && sheep[i].y < max.y) { max = sheep[i]; }
+        }
+        double diffTop = Math.abs(max.y - Calculator.FIELD_SIZE);
+        double diffBottom = Math.abs(min.y - Calculator.FIELD_SIZE);
+        if (diffTop < MAX_DIFF || diffBottom < MAX_DIFF) {
+            massed = true;
+        }
+        return massed;
+    }
     
+    private Point getFurthestSheep(ArrayList<Integer> undeliveredIndices,
+            Point[] sheep, Point[] dogs) {
+        
+        double greatestDist = 0.0;
+        int greatestIndex = -1;
+        for (int i : undeliveredIndices) {
+            if (Calculator.dist(GAP, sheep[i]) > greatestDist) {
+                greatestIndex = i;
+                greatestDist = Calculator.dist(GAP, sheep[i]);
+            }
+        }
+        
+        return sheep[greatestIndex];
+    }
+
     /**
      * Generates a convex hull for a given array of sheep
      * @param sheep
@@ -95,16 +132,6 @@ public class ConvexHullBrain extends DogBrain {
             }
             p1 = sheep[hull.get(hull.size()-1)];
         }
-        
-//        //debugging print to confirm correct hull formation
-//        System.out.println("*******************HULL*********************");
-//        for(Point i: hull)
-//        {
-//        	System.out.println(i);
-//        }
-//        System.out.println("*********************************************");
-//        //end of hull print
-        
         return hull;
         
     }
@@ -113,12 +140,6 @@ public class ConvexHullBrain extends DogBrain {
      * Chooses the next sheep this dog should move toward
      */
     private Point getSheepToTravelTo(ArrayList<Integer> hull, Point[] sheeps, Point[] dogs) {
-        // See if we've already chosen a sheep
-        if (targetSheep != -1 && followForXTurns != 0 && hull.contains(new Integer(targetSheep))) {
-            if (Calculator.dist(dogs[mId], sheeps[targetSheep]) <= Calculator.DOG_MAX_SPEED) { followForXTurns--; }
-            return sheeps[targetSheep];
-        }
-        
         ArrayList<Integer> choices = new ArrayList<Integer>();
         double maxLeftAngle = -Math.PI;
         int leftmost = -1;
@@ -156,27 +177,18 @@ public class ConvexHullBrain extends DogBrain {
         int nextGoal = -1;
         double dogAngle = Calculator.getAngleOfTrajectory(GAP, dogs[mId]);
         if (dogAngle == 0 || choices.size() == 1) { return sheeps[choices.get(0)]; } 
-        
-        while (nextGoal == -1) {
-            double leastDist = Calculator.FIELD_SIZE;
-          
-            for (Integer sheepIndex : choices) {
-                Point sheep = sheeps[sheepIndex];
-                double sheepAngle = Calculator.getAngleOfTrajectory(GAP, sheep);
-                double dogToSheep = Calculator.dist(dogs[mId], sheep);
-                boolean closetSheepInDirection = // (dogToSheep > Calculator.DOG_MAX_SPEED) &&
-                        (!clockwise && sheepAngle > dogAngle && dogToSheep < leastDist)
-                        || (clockwise && dogAngle > sheepAngle && dogToSheep < leastDist);
-                
-                if (closetSheepInDirection) {
-                    leastDist = dogToSheep;
-                    nextGoal = sheepIndex;
-                }
+        double leastDist = Calculator.FIELD_SIZE;
+      
+        for (Integer sheepIndex : choices) {
+            Point sheep = sheeps[sheepIndex];
+            double dogToSheep = Calculator.dist(dogs[mId], sheep);
+            boolean closetSheep = dogToSheep < leastDist;
+            
+            if (closetSheep) {
+                leastDist = dogToSheep;
+                nextGoal = sheepIndex;
             }
-            if (nextGoal == -1) { clockwise = !clockwise; }
         }
-        targetSheep = nextGoal;
-        followForXTurns = FOLLOW_FOR_START;
         return sheeps[nextGoal];
     }
     
