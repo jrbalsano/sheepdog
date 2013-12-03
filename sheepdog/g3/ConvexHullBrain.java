@@ -42,7 +42,7 @@ public class ConvexHullBrain extends DogBrain {
         boolean massed = sheepMassed(sheep, hull);
         Point sheepTarget;
         if (massed) {
-            sheepTarget = getFurthestSheep(hull, sheep, dogs);
+            sheepTarget = getFurthestSheep(undeliveredIndices, sheep, dogs);
         }
         else {
             sheepTarget = getSheepToTravelTo(hull, sheep, dogs);
@@ -73,7 +73,7 @@ public class ConvexHullBrain extends DogBrain {
     private Point getFurthestSheep(ArrayList<Integer> undeliveredIndices,
             Point[] sheep, Point[] dogs) {
         
-        double greatestDist = 0.0;
+        double greatestDist = -1;
         int greatestIndex = -1;
         for (int i : undeliveredIndices) {
             if (Calculator.dist(GAP, sheep[i]) > greatestDist) {
@@ -92,9 +92,10 @@ public class ConvexHullBrain extends DogBrain {
      */
     private ArrayList<Integer> getConvexHull(Point[] sheep, ArrayList<Integer> undeliveredIndices) {
         ArrayList<Integer> hull = new ArrayList<Integer>();
-        Point max = sheep[undeliveredIndices.get(0)], min = sheep[undeliveredIndices.get(0)];
+        ArrayList<Integer> undeliveredIndicesCopy = (ArrayList<Integer>) undeliveredIndices.clone();
+        Point max = sheep[undeliveredIndicesCopy.get(0)], min = sheep[undeliveredIndicesCopy.get(0)];
 
-        for(Integer i : undeliveredIndices) {
+        for(Integer i : undeliveredIndicesCopy) {
             Point p = sheep[i];
             if (p.y > max.y) { max = p; }
             if (p.y < min.y) { min = p; }
@@ -109,7 +110,7 @@ public class ConvexHullBrain extends DogBrain {
             Point p2 = null;
             double minAngle = Math.PI+1;
             int minIndex = -1;
-            for (Integer i : undeliveredIndices) {
+            for (Integer i : undeliveredIndicesCopy) {
                 Point candidate = sheep[i];
                 double angle = Calculator.getAngleOfTrajectory(p1, candidate);
                 
@@ -124,8 +125,8 @@ public class ConvexHullBrain extends DogBrain {
                 }
             }
             hull.add(minIndex);
-            if (undeliveredIndices.size() > 0) {
-                undeliveredIndices.remove(new Integer(minIndex));
+            if (undeliveredIndicesCopy.size() > 0) {
+                undeliveredIndicesCopy.remove(new Integer(minIndex));
             }
             if (p2.y == max.y) {
                 break;

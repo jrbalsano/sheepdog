@@ -28,7 +28,7 @@ public class Sheepdog
     static boolean recompile = true;
     
     // print more details?
-    static boolean verbose = true;
+    static boolean verbose = false;
 
     // Step by step trace
     static boolean trace = true;
@@ -532,16 +532,28 @@ public class Sheepdog
 
 
     boolean validateMove(Point src, Point dst) {
-        if (Double.isNaN(dst.x) || Double.isNaN(dst.y))
+        if (Double.isNaN(dst.x) || Double.isNaN(dst.y)) {
+            System.err.println("Nan");
             return false;
-        if (dst.x < 0 || dst.x > dimension)
+        }
+        if (dst.x < 0 || dst.x > dimension) {
+            System.err.println("bounds x");
             return false;
-        if (dst.y < 0 || dst.y > dimension)
+        }
+        if (dst.y < 0 || dst.y > dimension) {
+            System.err.println("bounds y");
             return false;
-        if (distance(src, dst) > DOG_SPEED)
+        }
+        if (distance(src, dst) > DOG_SPEED) {
+            System.err.println("too fast");
             return false;
-        if (hitTheFence(src.x,src.y,dst.x,dst.y))
+        }
+        if (hitTheFence(src.x,src.y,dst.x,dst.y)) {
+            System.err.println("hit fence");
+            System.err.println("Dog: " + src + " Dest: " + dst);
             return false;
+        }
+            
         return true;
     }
 
@@ -695,6 +707,10 @@ public class Sheepdog
             mode = Boolean.parseBoolean(args[4]);
         if (args.length > 5)
             gui = Boolean.parseBoolean(args[5]);
+        if (args.length > 6)
+            iterations = Integer.parseInt(args[6]);
+        if (args.length > 7)
+            version = args[7];
 
         // load players
         Player[] players = loadPlayers(group, ndogs);
