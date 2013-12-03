@@ -276,7 +276,7 @@ public class Sheepdog
     }
 
     class FieldPanel extends JPanel {
-        double PSIZE = 10;
+        double PSIZE = 7;
         double s;
         BasicStroke stroke = new BasicStroke(2.0f);
         double ox = 10.0;

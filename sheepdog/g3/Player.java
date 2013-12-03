@@ -24,12 +24,12 @@ public class Player extends sheepdog.sim.Player  {
     public Point move(Point[] dogs, Point[] sheeps) {
         if (mBrain == null) {
             if(mMode || sweeperComplete || dogs.length < 26) {
-//                if(dogs.length>=10 && !mMode) {
-//                    mBrain = new ConvexHullBrain(id, mMode, mNblacks);
-//                }
-//                else {
+                if(dogs.length>=10 && !mMode) {
+                    mBrain = new ConvexHullBrain(id, mMode, mNblacks);
+                }
+                else {
                     mBrain = new StraightLineBrainMe(id, mMode, mNblacks);
-//                }
+                }
             }
             else {
                 mBrain = new SweeperBrain(id, mMode, mNblacks);

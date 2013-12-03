@@ -8,7 +8,7 @@ import sheepdog.g3.Calculator.SIDE;
 import sheepdog.sim.Point;
 
 public class ConvexHullBrain extends DogBrain {
-    private final double MAX_DIFF = 10.0;
+    private final double MAX_DIFF = 3.0;
     double zoneAngleSize;
     double myAngleStart;
     double myAngleEnd;
@@ -42,7 +42,7 @@ public class ConvexHullBrain extends DogBrain {
         boolean massed = sheepMassed(sheep, hull);
         Point sheepTarget;
         if (massed) {
-            sheepTarget = getFurthestSheep(undeliveredIndices, sheep, dogs);
+            sheepTarget = getFurthestSheep(hull, sheep, dogs);
         }
         else {
             sheepTarget = getSheepToTravelTo(hull, sheep, dogs);
@@ -62,8 +62,8 @@ public class ConvexHullBrain extends DogBrain {
             if (sheep[i].y < Calculator.FIELD_SIZE * 0.5 && sheep[i].y < min.y) { min = sheep[i]; }
             if (sheep[i].y > Calculator.FIELD_SIZE * 0.5 && sheep[i].y < max.y) { max = sheep[i]; }
         }
-        double diffTop = Math.abs(max.y - Calculator.FIELD_SIZE);
-        double diffBottom = Math.abs(min.y - Calculator.FIELD_SIZE);
+        double diffTop = Math.abs(max.y - Calculator.FIELD_SIZE * .5);
+        double diffBottom = Math.abs(min.y - Calculator.FIELD_SIZE * .5);
         if (diffTop < MAX_DIFF || diffBottom < MAX_DIFF) {
             massed = true;
         }
@@ -150,19 +150,14 @@ public class ConvexHullBrain extends DogBrain {
         for(Integer sheepIndex : hull) {
             Point sheep = sheeps[sheepIndex];
             double sheepAngle = Calculator.getAngleOfTrajectory(GAP, sheep);
-            System.out.println("Sheep Angle: " + sheepAngle + " start: " + myAngleStart + "end: " + myAngleEnd);
-            System.out.println("MaxLeftAngle: " + maxLeftAngle + " MinRightAngle: " + minRightAngle);
             if (sheepAngle > myAngleStart && sheepAngle < myAngleEnd) {
-                System.out.println("New choice " + sheep);
                 choices.add(sheepIndex);
             }
             else if (sheepAngle <= myAngleStart && sheepAngle > maxLeftAngle) {
-                System.out.println("New leftmost " + sheep);
                 maxLeftAngle = sheepAngle;
                 leftmost = sheepIndex;
             }
             else if (sheepAngle >= myAngleEnd && sheepAngle < minRightAngle) {
-                System.out.println("New rightmost " + sheep);
                 minRightAngle = sheepAngle;
                 rightmost = sheepIndex;
             }
