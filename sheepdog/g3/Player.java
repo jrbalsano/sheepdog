@@ -75,17 +75,14 @@ public class Player extends sheepdog.sim.Player  {
             || hullEstimate > sweepEstimate) {
             if(!hullComplete && hullEstimate < straightLineEstimate  && existsUndeliveredBlackSheep) {
                 mBrain = new ConvexHullBrain(id, mMode, mNblacks);
-                System.err.println("hull");
             }
             else {
                 hullComplete = true;
                 mBrain = new StraightLineBrainMe(id, mMode, mNblacks);
-                System.err.println("straight");
             }
         }
         else {
             mBrain = new SweeperBrain(id, mMode, mNblacks);
-            System.err.println("sweep");
         }
 
         return mBrain.getMove(dogs, sheeps);
