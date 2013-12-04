@@ -21,7 +21,6 @@ public class SweeperBrain extends DogBrain{
 	
 	public Point getBasicMove(Point[] dogs, Point[] sheeps) {
 		
-		
 		ArrayList<Integer> undeliveredIndices = Calculator.undeliveredBlackSheep(sheeps);
 		Point me = dogs[mId];
 //        System.out.println("Dogs at end: "+ dogsAtEnd);
