@@ -59,11 +59,11 @@ public class ConvexHullBrain extends DogBrain {
         Point min = sheep[hull.get(0)];
         Point max = sheep[hull.get(0)];
         for (int i : hull) {
-            if (sheep[i].y < Calculator.FIELD_SIZE * 0.5 && sheep[i].y < min.y) { min = sheep[i]; }
-            if (sheep[i].y > Calculator.FIELD_SIZE * 0.5 && sheep[i].y < max.y) { max = sheep[i]; }
+            if (sheep[i].y < min.y) { min = sheep[i]; }
+            if (sheep[i].y > max.y) { max = sheep[i]; }
         }
-        double diffTop = Math.abs(max.y - Calculator.FIELD_SIZE * .5);
-        double diffBottom = Math.abs(min.y - Calculator.FIELD_SIZE * .5);
+        double diffTop = max.y - Calculator.FIELD_SIZE * 0.5;
+        double diffBottom = Calculator.FIELD_SIZE * 0.5 - min.y;
         if (diffTop < MAX_DIFF || diffBottom < MAX_DIFF) {
             massed = true;
         }
