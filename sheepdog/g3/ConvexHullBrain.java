@@ -23,8 +23,29 @@ public class ConvexHullBrain extends DogBrain {
     @Override
     public Point getAdvancedMove(Point[] dogs, Point[] whiteSheep,
             Point[] blackSheep) {
-        // TODO Expand strategy to advanced game
-        return null;
+        Point me = dogs[mId];
+        zoneAngleSize = Math.PI/dogs.length;
+        myAngleStart = -Math.PI/2 + mId * zoneAngleSize;
+        myAngleEnd = myAngleStart + zoneAngleSize;
+        if (Calculator.getSide(me.x) == SIDE.BLACK_GOAL_SIDE) {
+            return Calculator.getMoveTowardPoint(me, GAP);
+        }
+        ArrayList<Integer> undeliveredIndices = Calculator.undeliveredBlackSheep(blackSheep);
+        ArrayList<Integer> hull = getConvexHull(blackSheep, undeliveredIndices);
+        
+        boolean massed = sheepMassed(blackSheep, hull);
+        Point sheepTarget;
+        if (massed) {
+            sheepTarget = getFurthestSheep(undeliveredIndices, blackSheep, dogs);
+        }
+        else {
+            sheepTarget = getSheepToTravelTo(hull, blackSheep, dogs);
+        }
+        
+        if (sheepTarget.x == 50.0) {
+            return Calculator.getMoveTowardPoint(me, sheepTarget);
+        }
+        return forceSheepToMove(sheepTarget, me);
     }
 
     @Override

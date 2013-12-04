@@ -16,24 +16,24 @@ public class Player extends sheepdog.sim.Player  {
         //    mBrain = new StraightLineBrainFar(id, mode, nblacks);
         //    mBrain = new StraightLineBrainMe(id, mode, nblacks);
         //    mBrain = new SteinerBrain(id, mode, nblacks);
-        //    mBrain = new ConvexHullBrain(id, mode, nblacks);
+            mBrain = new ConvexHullBrain(id, mode, nblacks);
 
     }
 
     @Override
     public Point move(Point[] dogs, Point[] sheeps) {
 //        if (mBrain == null) {
-            if(mMode || sweeperComplete || dogs.length < 26) {
-                if(dogs.length>=2 && !mMode) {
-                    mBrain = new ConvexHullBrain(id, mMode, mNblacks);
-                }
-                else {
-                    mBrain = new StraightLineBrainMe(id, mMode, mNblacks);
-                }
-            }
-            else {
-                mBrain = new SweeperBrain(id, mMode, mNblacks);
-            }
+//            if(mMode || sweeperComplete || dogs.length < 26) {
+//                if(dogs.length>=2 && !mMode) {
+//                    mBrain = new ConvexHullBrain(id, mMode, mNblacks);
+//                }
+//                else {
+//                    mBrain = new StraightLineBrainMe(id, mMode, mNblacks);
+//                }
+//            }
+//            else {
+//                mBrain = new SweeperBrain(id, mMode, mNblacks);
+//            }
 //        }
 
 
