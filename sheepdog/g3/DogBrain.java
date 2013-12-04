@@ -10,8 +10,7 @@ public abstract class DogBrain {
   protected boolean mAdvanced;
   protected int mNblacks;
   protected double DOG_SHEEP_MIN_DIST = 1; 
-  private static final double SHEEP_RUN_SPEED = 1.000;
-  private static final double SHEEP_WALK_SPEED = 0.100;
+  
   protected static final Point GAP = new Point(50, 50);
   
   public DogBrain(int id, boolean advanced, int nblacks) {
@@ -70,8 +69,8 @@ public abstract class DogBrain {
           return true;
   }
   
-  protected Point forceSheepToMove(Point sheep, Point me) {
-      sheep = anticipateSheepMovement(me, sheep);
+  protected Point forceSheepToMove(Point sheep, Point me, Point[] dogs, Point[] sheeps) {
+      sheep = Calculator.moveSheep(sheep, dogs, sheeps);
       double angleGapToSheep = Calculator.getAngleOfTrajectory(GAP, sheep);
       Point idealLocation = Calculator.getMoveInDirection(sheep, angleGapToSheep, DOG_SHEEP_MIN_DIST);
       Point moveLocation = Calculator.getMoveTowardPoint(me, idealLocation);
@@ -81,12 +80,12 @@ public abstract class DogBrain {
   
   private Point anticipateSheepMovement(Point me, Point targetSheep) {
       double angleDogToSheep = Calculator.getAngleOfTrajectory(me, targetSheep);
-      if (Calculator.withinRunDistance(targetSheep, me)) {
-          targetSheep = Calculator.getMoveInDirection(targetSheep, angleDogToSheep, SHEEP_RUN_SPEED);
-      }
-      else if (Calculator.withinWalkDistance(targetSheep, me)) {
-          targetSheep = Calculator.getMoveInDirection(targetSheep, angleDogToSheep, SHEEP_WALK_SPEED);
-      }
+//      if (Calculator.withinRunDistance(targetSheep, me)) {
+//          targetSheep = Calculator.getMoveInDirection(targetSheep, angleDogToSheep, SHEEP_RUN_SPEED);
+//      }
+//      else if (Calculator.withinWalkDistance(targetSheep, me)) {
+//          targetSheep = Calculator.getMoveInDirection(targetSheep, angleDogToSheep, SHEEP_WALK_SPEED);
+//      }
       return targetSheep;
   }
 }

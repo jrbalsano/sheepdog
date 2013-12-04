@@ -45,7 +45,7 @@ public class ConvexHullBrain extends DogBrain {
         if (sheepTarget.x == 50.0) {
             return Calculator.getMoveTowardPoint(me, sheepTarget);
         }
-        return forceSheepToMove(sheepTarget, me);
+        return forceSheepToMove(sheepTarget, me, dogs, blackSheep);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ConvexHullBrain extends DogBrain {
         if (sheepTarget.x == 50.0) {
             return Calculator.getMoveTowardPoint(me, sheepTarget);
         }
-        return forceSheepToMove(sheepTarget, me);
+        return forceSheepToMove(sheepTarget, me, dogs, sheep);
     }
 
     private boolean sheepMassed(Point[] sheep, ArrayList<Integer> hull) {
