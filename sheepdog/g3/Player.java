@@ -22,9 +22,9 @@ public class Player extends sheepdog.sim.Player  {
 
     @Override
     public Point move(Point[] dogs, Point[] sheeps) {
-        if (mBrain == null) {
+//        if (mBrain == null) {
             if(mMode || sweeperComplete || dogs.length < 26) {
-                if(dogs.length>=10 && !mMode) {
+                if(dogs.length>=2 && !mMode) {
                     mBrain = new ConvexHullBrain(id, mMode, mNblacks);
                 }
                 else {
@@ -34,7 +34,7 @@ public class Player extends sheepdog.sim.Player  {
             else {
                 mBrain = new SweeperBrain(id, mMode, mNblacks);
             }
-        }
+//        }
 
 
         //	  if(SteinerBrain.removal==1)

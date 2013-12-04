@@ -715,7 +715,7 @@ public class Sheepdog
         // load players
         Player[] players = loadPlayers(group, ndogs);
         
-        int average = 0;
+        double average = 0;
         for (int i = 0; i < iterations; i++) {
             // load players
             Player[] players2 = loadPlayers(group, ndogs);
@@ -739,7 +739,7 @@ public class Sheepdog
         }
         else {
             PrintWriter writer = new PrintWriter(new FileWriter("stats.csv", true));
-            writer.printf("\"%s\",\"%s\",\"%d\",\"%d\",\"%d\",\"%b\",\"%d\",\"%d\"\n", 
+            writer.printf("\"%s\",\"%s\",\"%d\",\"%d\",\"%d\",\"%b\",\"%d\",\"%f\"\n", 
                     version, group, ndogs, nsheeps, nblacks, mode, iterations, average);
             writer.close();
         }
